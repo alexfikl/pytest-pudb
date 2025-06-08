@@ -1,6 +1,12 @@
 History
 -------
 
+0.8.0 (2025-06-08)
+++++++++++++++++++
+
+- Added support for pytest 8.4.0
+- Modernized packaging (``pyproject.toml``) and linting (``ruff``).
+
 0.7.0 (2018-10-25)
 ++++++++++++++++++
 
