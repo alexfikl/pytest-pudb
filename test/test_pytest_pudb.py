@@ -9,7 +9,7 @@ def test_pudb_interaction(testdir):
         def test_1():
             assert 0 == 1
     """)
-    child = testdir.spawn_pytest("--pudb %s" % p1)
+    child = testdir.spawn_pytest(f"--pudb {p1}")
     child.expect("PuDB")
     child.expect(HELP_MESSAGE)
     # Check that traceback postmortem handled
