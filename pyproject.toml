@@ -33,18 +33,6 @@ dev = [
 [project.urls]
 Repository = "https://github.com/wronglink/pytest-pudb"
 
-[tool.hatch.build.targets.sdist]
-include = [
-    "HISTORY.rst",
-    "pytest_pudb.py",
-    "test_pytest_pudb.py",
-    "tox.ini"
-    ]
-exclude = ["**/.gitignore"]
-
-[too.hatch.build.targets.wheel]
-include = ["pytest_pudb.py"]
-
 [project.entry-points.pytest11]
 pudb = "pytest_pudb"
 
