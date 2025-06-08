@@ -18,7 +18,11 @@ def pytest_configure(config):
         config.pluginmanager.register(pudb_wrapper, 'pudb_wrapper')
 
     pudb_wrapper.mount()
-    config._cleanup.append(pudb_wrapper.unmount)
+
+    try:
+        config.add_cleanup(pudb_wrapper.unmount)
+    except AttributeError:
+        config._cleanup.append(pudb_wrapper.unmount)
 
 
 class PuDBWrapper(object):
