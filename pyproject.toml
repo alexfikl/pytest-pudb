@@ -24,7 +24,6 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pexpect",
     "flake8",
     "Flake8-pyproject",
 ]
