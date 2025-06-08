@@ -1,0 +1,52 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[project]
+name = "pytest-pudb"
+version = "0.7.0"
+description = "Pytest PuDB debugger integration"
+readme = "README.rst"
+license = "MIT"
+authors = [{ name = "Michael Elovskikh", email = "wronglink@gmail.com" }]
+maintainers = [{ name = "Alexandru Fikl", email = "alexfikl@gmail.com" }]
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Topic :: Software Development :: Testing",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pytest>=2.0",
+    "pudb",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pexpect",
+    "tox",
+    "flake8",
+    "Flake8-pyproject",
+]
+
+[project.urls]
+Repository = "https://github.com/wronglink/pytest-pudb"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "HISTORY.rst",
+    "pytest_pudb.py",
+    "test_pytest_pudb.py",
+    "tox.ini"
+    ]
+exclude = ["**/.gitignore"]
+
+[too.hatch.build.targets.wheel]
+include = ["pytest_pudb.py"]
+
+[project.entry-points.pytest11]
+pudb = "pytest_pudb"
+
+[tool.flake8]
+max-line-length = 88
