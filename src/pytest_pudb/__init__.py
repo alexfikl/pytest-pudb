@@ -8,8 +8,13 @@ import pudb
 
 def pytest_addoption(parser):
     group = parser.getgroup("general")
-    group._addoption("--pudb", action="store_true", dest="usepudb", default=False,
-                     help="start the PuDB debugger on errors.")
+    group._addoption(
+        "--pudb",
+        action="store_true",
+        dest="usepudb",
+        default=False,
+        help="start the PuDB debugger on errors.",
+    )
 
 
 def pytest_configure(config):
@@ -27,7 +32,8 @@ def pytest_configure(config):
 
 
 class PuDBWrapper:
-    """ Pseudo PDB that defers to the real pudb. """
+    """Pseudo PDB that defers to the real pudb."""
+
     pluginmanager = None
     config = None
 
@@ -87,10 +93,13 @@ class PuDBWrapper:
             # pytest changed the suspend capture API since v3.3.1
             # see: https://github.com/pytest-dev/pytest/pull/2801
             # TODO: drop this case after pytest v3.3.1+ is minimal required
-            warnings.warn("You are using the outdated version of pytest. "
-                          "The support for this version will be dropped in the "
-                          "future pytest-pudb versions.",
-                          DeprecationWarning, stacklevel=3)
+            warnings.warn(
+                "You are using the outdated version of pytest. "
+                "The support for this version will be dropped in the "
+                "future pytest-pudb versions.",
+                DeprecationWarning,
+                stacklevel=3,
+            )
             return capman.suspendcapture(*args, **kwargs)
 
         if not hasattr(capman, "snap_global_capture"):
@@ -114,6 +123,7 @@ def _postmortem_traceback(excinfo):
     # A doctest.UnexpectedException is not useful for post_mortem.
     # Use the underlying exception instead:
     from doctest import UnexpectedException
+
     if isinstance(excinfo.value, UnexpectedException):
         return excinfo.value.exc_info[2]
     else:
