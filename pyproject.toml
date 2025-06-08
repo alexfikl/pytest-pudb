@@ -22,6 +22,9 @@ dependencies = [
     "pudb",
 ]
 
+[project.optional-dependencies]
+dev = ["pexpect"]
+
 [project.urls]
 Repository = "https://github.com/wronglink/pytest-pudb"
 
