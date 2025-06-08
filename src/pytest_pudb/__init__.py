@@ -87,7 +87,8 @@ class PuDBWrapper(object):
             # see: https://github.com/pytest-dev/pytest/pull/2801
             # TODO: drop this case after pytest v3.3.1+ is minimal required
             warnings.warn('You are using the outdated version of pytest. '
-                          'The support for this version will be dropped in the future pytest-pudb versions.',
+                          'The support for this version will be dropped in the '
+                          'future pytest-pudb versions.',
                           DeprecationWarning)
             return capman.suspendcapture(*args, **kwargs)
 

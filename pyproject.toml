@@ -25,7 +25,6 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pexpect",
-    "tox",
     "flake8",
     "Flake8-pyproject",
 ]
@@ -38,3 +37,4 @@ pudb = "pytest_pudb"
 
 [tool.flake8]
 max-line-length = 88
+select = ["E", "F", "W"]
