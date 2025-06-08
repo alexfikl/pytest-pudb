@@ -21,10 +21,6 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     pudb_wrapper = PuDBWrapper(config)
-
-    if config.getvalue("usepudb"):
-        config.pluginmanager.register(pudb_wrapper, "pudb_wrapper")
-
     pudb_wrapper.mount()
 
     try:
@@ -44,9 +40,16 @@ class PuDBWrapper:
         self.pluginmanager = config.pluginmanager
         self._pudb_get_debugger = None
 
+    @property
+    def with_pudb_option(self):
+        return self.config.getvalue("usepudb")
+
     def mount(self):
         self._pudb_get_debugger = pudb._get_debugger
         pudb._get_debugger = self._get_debugger
+
+        if self.with_pudb_option:
+            self.config.pluginmanager.register(self, "pudb_wrapper")
 
     def unmount(self):
         if self._pudb_get_debugger:
