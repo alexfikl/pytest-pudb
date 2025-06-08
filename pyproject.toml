@@ -64,4 +64,4 @@ inline-quotes = "double"
 multiline-quotes = "double"
 
 [tool.ruff.lint.isort]
-known-first-party = ["pytest", "pudb"]
+known-first-party = ["pytest", "_pytest", "pudb"]
