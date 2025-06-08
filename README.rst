@@ -1,41 +1,38 @@
-===========
 pytest-pudb
 ===========
 
-.. image:: https://travis-ci.org/wronglink/pytest-pudb.svg?branch=master
-   :target: https://travis-ci.org/wronglink/pytest-pudb
-   :alt: Travis-ci: continuous integration status.
+.. image:: https://github.com/alexfikl/pytest-pudb/actions/workflows/ci.yml/badge.svg
+    :alt: Github Build Status
+    :target: https://github.com/alexfikl/pytest-pudb/actions/workflows/ci.yml
 
-Pytest PuDB debugger integration based on pytest `PDB integration`_
+`PuDB <https://pypi.org/project/pudb/>`__ debugger integration for
+`pytest <https://pypi.org/project/pytest/>`__ based on the existing
+`PDB integration <https://docs.pytest.org/en/stable/how-to/failures.html>`__. It
+can be used with the ``--pudb`` flag directly as
 
+.. code:: bash
 
-Use it as ``--pdb`` ``py.test`` command argument:
+    python -m pytest --pudb
 
-
-.. code-block:: console
-
-    py.test --pudb
-
-Or simply use ``pudb.set_trace`` inside your python code:
+This will open the debugger on any error in the tests. Alternatively, you can
+also use `breakpoint <https://docs.python.org/3/library/functions.html#breakpoint>`__
+command inside your Python code, which will automatically open the PuDB debugger
+at that point.
 
 .. code-block:: python
 
+    def test_breakpoint_integration():
+        breakpoint()
+        assert 1 == 2
+
     def test_set_trace_integration():
-        # No --capture=no need
+        # equivalent to breakpoint()
         import pudb
         pudb.set_trace()
+
         assert 1 == 2
 
     def test_pudb_b_integration():
-        # No --capture=no need
         import pudb.b
         # traceback is set up here
         assert 1 == 2
-
-
-See also `pytest`_ and `pudb`_ projects.
-
-
-.. _PDB integration: http://doc.pytest.org/en/latest/usage.html#dropping-to-pdb-python-debugger-on-failures
-.. _pudb: https://pypi.python.org/pypi/pudb
-.. _pytest: https://pypi.python.org/pypi/pytest
