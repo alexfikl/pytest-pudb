@@ -110,6 +110,30 @@ def test_pudb_b_integration(testdir):
     child.sendeof()
 
 
+def test_pudb_leave_pdb_hook(testdir):
+    import pexpect
+
+    testdir.makeconftest("""
+        def pytest_enter_pdb(config, pdb):
+            print("pytest_enter_pdb was called")
+        def pytest_leave_pdb(config, pdb):
+            print("pytest_leave_pdb was called")
+    """)
+
+    p1 = testdir.makepyfile("""
+        def test_1():
+            assert 0 == 1
+    """)
+    child = testdir.spawn_pytest(f"--pudb -s {p1}")
+    child.expect(r"pytest_enter_pdb was called")
+    child.expect("PuDB")
+    child.expect("PROCESSING EXCEPTION")
+    child.write("q")
+    ret = child.expect([r"pytest_leave_pdb was called", pexpect.EOF])
+    if ret == 1:
+        pytest.fail("pytest_leave_pdb was not called")
+
+
 def test_pudb_avoid_double_prologue(testdir):
     import pexpect
 

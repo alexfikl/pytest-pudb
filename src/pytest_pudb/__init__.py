@@ -46,6 +46,8 @@ class PuDBWrapper:
         return self.config.getvalue("usepudb")
 
     def mount(self):
+        PuDBWrapper.pluginmanager = self.pluginmanager
+        PuDBWrapper.config = self.config
         self._pudb_get_debugger = pudb._get_debugger
         pudb._get_debugger = self._get_debugger
 
@@ -56,6 +58,8 @@ class PuDBWrapper:
         if self._pudb_get_debugger:
             pudb._get_debugger = self._pudb_get_debugger
             self._pudb_get_debugger = None
+        PuDBWrapper.pluginmanager = None
+        PuDBWrapper.config = None
 
     def disable_io_capture(self):
         if self.pluginmanager is not None:
@@ -154,6 +158,11 @@ def post_mortem(tb, excinfo):
     dbg.reset()
     i = _find_last_non_hidden_frame(stack)
     dbg.interaction(stack[i][0], excinfo._excinfo)
+
+    if PuDBWrapper.pluginmanager is not None:
+        PuDBWrapper.pluginmanager.hook.pytest_leave_pdb(
+            config=PuDBWrapper.config, pdb=dbg
+        )
 
 
 def _find_last_non_hidden_frame(stack):
