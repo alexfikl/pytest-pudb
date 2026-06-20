@@ -79,7 +79,20 @@ class PuDBWrapper:
 
     def _get_debugger(self, **kwargs):
         self.disable_io_capture()
-        return self._pudb_get_debugger.__call__(**kwargs)
+        dbg = self._pudb_get_debugger.__call__(**kwargs)
+
+        original_get_stack = dbg.get_stack
+
+        def filtered_get_stack(f, t):
+            stack, i = original_get_stack(f, t)
+            if f is None:
+                i = max(0, len(stack) - 1)
+                while i and stack[i][0].f_locals.get("__tracebackhide__", False):
+                    i -= 1
+            return stack, i
+
+        dbg.get_stack = filtered_get_stack
+        return dbg
 
     @pytest.hookimpl(wrapper=True)
     def pytest_runtest_call(self, item):
@@ -154,19 +167,10 @@ def _postmortem_traceback(excinfo):
 
 def post_mortem(tb, excinfo):
     dbg = pudb._get_debugger()
-    stack, i = dbg.get_stack(None, tb)
     dbg.reset()
-    i = _find_last_non_hidden_frame(stack)
-    dbg.interaction(stack[i][0], excinfo._excinfo)
+    dbg.interaction(None, excinfo._excinfo)
 
     if PuDBWrapper.pluginmanager is not None:
         PuDBWrapper.pluginmanager.hook.pytest_leave_pdb(
             config=PuDBWrapper.config, pdb=dbg
         )
-
-
-def _find_last_non_hidden_frame(stack):
-    i = max(0, len(stack) - 1)
-    while i and stack[i][0].f_locals.get("__tracebackhide__", False):
-        i -= 1
-    return i

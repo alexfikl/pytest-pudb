@@ -110,6 +110,29 @@ def test_pudb_b_integration(testdir):
     child.sendeof()
 
 
+def test_pudb_tracebackhide(testdir):
+    p1 = testdir.makepyfile("""
+        def helper():
+            __tracebackhide__ = True
+            assert 0
+
+        def test_1():
+            myvar = 42
+            helper()
+    """)
+    child = testdir.spawn_pytest(f"--pudb {p1}")
+    child.expect("PuDB")
+    child.expect(HELP_MESSAGE)
+    child.expect("PROCESSING EXCEPTION")
+    child.expect(VARIABLES_TABLE)
+    child.send("V")
+    child.send("n")
+    child.expect("Add Watch Expression")
+    child.sendline("myvar")
+    child.expect(r"myvar:.*42")
+    child.sendeof()
+
+
 def test_pudb_leave_pdb_hook(testdir):
     import pexpect
 
