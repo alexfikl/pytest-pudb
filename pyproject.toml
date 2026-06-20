@@ -56,6 +56,7 @@ lint.select = [
 lint.ignore = [
     "E402",    # module-import-not-at-top-of-file
     "ISC001",  # single-line-implicit-string-concatenation
+    "RUF067",  # non-empty-init-module
     "UP037",   # quoted-annotation
 ]
 [tool.ruff.lint.flake8-quotes]

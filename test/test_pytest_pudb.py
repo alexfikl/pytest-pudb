@@ -16,7 +16,7 @@ seen_welcome = e999
 """
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True)  # noqa: RUF076
 def pudb_xdg_home(tmp_path_factory, monkeypatch):
     configdir = tmp_path_factory.mktemp("pytest_pudb_testdir")
     monkeypatch.setenv("XDG_CONFIG_HOME", configdir)
