@@ -3,8 +3,8 @@
 import sys
 import warnings
 
-import _pytest.unittest
 import pudb
+import pytest
 
 ENTER_MESSAGE = "entering PuDB (IO-capturing turned off)"
 
@@ -40,7 +40,6 @@ class PuDBWrapper:
         self.config = config
         self.pluginmanager = config.pluginmanager
         self._pudb_get_debugger = None
-        self._test_case_function_runtest = None
 
     @property
     def with_pudb_option(self):
@@ -53,24 +52,10 @@ class PuDBWrapper:
         if self.with_pudb_option:
             self.config.pluginmanager.register(self, "pudb_wrapper")
 
-            def runtest(self):
-                # disables tearDown and cleanups for post mortem debugging
-                # see: https://github.com/pytest-dev/pytest/pull/1890
-                if self._handle_skip():
-                    return
-                self._testcase.debug()
-
-            self._test_case_function_runtest = _pytest.unittest.TestCaseFunction.runtest
-            _pytest.unittest.TestCaseFunction.runtest = runtest
-
     def unmount(self):
         if self._pudb_get_debugger:
             pudb._get_debugger = self._pudb_get_debugger
             self._pudb_get_debugger = None
-
-        if self._test_case_function_runtest:
-            _pytest.unittest.TestCaseFunction.runtest = self._test_case_function_runtest
-            self._test_case_function_runtest = None
 
     def disable_io_capture(self):
         if self.pluginmanager is not None:
@@ -91,6 +76,17 @@ class PuDBWrapper:
     def _get_debugger(self, **kwargs):
         self.disable_io_capture()
         return self._pudb_get_debugger.__call__(**kwargs)
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_runtest_call(self, item):
+        from _pytest.unittest import TestCaseFunction
+
+        if isinstance(item, TestCaseFunction):
+            testcase = item.instance
+            if testcase is not None:
+                item._explicit_tearDown = testcase.tearDown
+                testcase.tearDown = lambda *args: None
+        yield
 
     def pytest_exception_interact(self, node, call, report):
         """

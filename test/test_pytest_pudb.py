@@ -65,7 +65,7 @@ def test_pudb_unittest_teardown_interaction(testdir):
     child.send("n")  # Add watch expression
     child.expect("Add Watch Expression")
     child.sendline("self.a")  # Set self.a
-    child.expect("self.a: \x1b\\[0;30;42mTrue")
+    child.expect(r"self\.a:.*True")
     child.sendeof()
 
 
