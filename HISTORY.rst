@@ -1,11 +1,20 @@
 History
 -------
 
+0.9.0 (2026-06-20)
+++++++++++++++++++
+
+- Update calls to ``pytest_enter_pdb``
+- Add symmetric call to ``pytest_leave_pdb``
+- Remove call to ``disable_io_capture``
+- Fix teardown in unittest.
+- Skip frames with ``__tracebackhide__ = True``.
+
 0.8.0 (2025-06-08)
 ++++++++++++++++++
 
 - Added support for pytest 8.4.0
-- Modernized packaging (``pyproject.toml``) and linting (``ruff``).
+- Modernized packaging (``pyproject.toml``) and linting (``ruff``)
 
 0.7.0 (2018-10-25)
 ++++++++++++++++++
